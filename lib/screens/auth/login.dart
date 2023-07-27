@@ -12,7 +12,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(" Welcome to We Chat  "),
+        title: const Text(" Welcome  "),
       ),
     );
   }
