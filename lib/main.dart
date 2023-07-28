@@ -18,11 +18,11 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
             useMaterial3: true,
             appBarTheme: const AppBarTheme(
-              elevation: 1,
-              centerTitle: true,
-              titleTextStyle: TextStyle(color: Colors.black),
-              backgroundColor: Colors.white,
-            )),
+                elevation: 0,
+                centerTitle: true,
+                titleTextStyle: TextStyle(color: Colors.black),
+                // backgroundColor: Colors.white,
+                backgroundColor: Colors.transparent)),
         home: const Login());
   }
 }
