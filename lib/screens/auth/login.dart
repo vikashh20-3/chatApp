@@ -69,7 +69,7 @@ class _LoginState extends State<Login> {
             left: MediaQuery.of(context).size.width * .25,
             child: Image.asset('images/chat.png')),
         Positioned(
-          width: MediaQuery.of(context).size.width - 40,
+          width: MediaQuery.of(context).size.width - 70,
           bottom: MediaQuery.of(context).size.height * .12,
           left: MediaQuery.of(context).size.width * .15,
           height: MediaQuery.of(context).size.width * .08,
