@@ -1,8 +1,8 @@
+import 'package:chatapp/screens/auth/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
-import 'screens/auth/login.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,10 @@ class MyApp extends StatelessWidget {
                 titleTextStyle: TextStyle(color: Colors.black),
                 // backgroundColor: Colors.white,
                 backgroundColor: Colors.transparent)),
+        // home: const Login());
         home: const Login());
+
+    //  const Login());
   }
 }
 
