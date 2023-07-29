@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chatapp/api/apis.dart';
@@ -45,6 +46,27 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Icon(Icons.add_comment_rounded),
         ),
+      ),
+      body: StreamBuilder(
+        stream: APIs.firestore.collection('users').snapshots(),
+        builder: (context, snapshot) {
+          final list = [];
+          if (snapshot.hasData) {
+            final data = snapshot.data?.docs;
+            for (var i in data!) {
+              log('\n Data: ${jsonEncode(i.data())}');
+              list.add(i.data()['name']);
+            }
+            // log('\n Data from firestor =${data}');
+          }
+          return ListView.builder(
+              itemCount: list.length,
+              physics: BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                // return ChatUserCard();
+                return Text('${list[index]}');
+              });
+        },
       ),
     );
   }
