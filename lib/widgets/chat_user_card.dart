@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../models/chat_user.dart';
@@ -25,16 +26,33 @@ class _ChatUserCardState extends State<ChatUserCard> {
       child: InkWell(
         onTap: () {},
         child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            child: Icon(Icons.person_3_outlined),
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(55),
+            child: CachedNetworkImage(
+              imageUrl: widget.user.image ?? '',
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  CircularProgressIndicator(value: downloadProgress.progress),
+              errorWidget: (context, url, error) =>
+                  Icon(Icons.person_add_disabled_rounded),
+            ),
           ),
+          // leading: CircleAvatar(
+          //   backgroundColor: Colors.transparent,
+          //   child: Icon(Icons.person_3_outlined),
+          // ),
           title: Text(widget.user.name ?? ''),
           subtitle: Text(
             widget.user.about ?? '',
             maxLines: 1,
           ),
-          trailing: Text("12:43"),
+          // trailing: Text("12:43"),
+          trailing: Container(
+            height: 10,
+            width: 10,
+            decoration: BoxDecoration(
+                color: Colors.pink[200],
+                borderRadius: BorderRadius.circular(15)),
+          ),
         ),
       ),
     );
