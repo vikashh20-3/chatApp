@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chatapp/api/apis.dart';
@@ -6,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../models/chat_user.dart';
+import '../widgets/chat_user_card.dart';
 import 'auth/login.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,8 +24,8 @@ _logoutUser(BuildContext context) {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // List<ChatUser> list = [];
-  List list = [];
+  List<ChatUser> list = [];
+  // List list = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,18 +63,23 @@ class _HomeScreenState extends State<HomeScreen> {
               case ConnectionState.active:
               case ConnectionState.done:
                 final data = snapshot.data?.docs;
-                for (var i in data!) {
-                  log('\n Data: ${jsonEncode(i.data())}');
-                  list.add(i.data()['name']);
-                }
+                list = data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
+                    [];
+
+              // for (var i in data!) {
+              //   log('\n Data: ${jsonEncode(i.data())}');
+              //   list.add(i.data()['name']);
+              // }
               // log('\n Data from firestor =${data}');
             }
             return ListView.builder(
                 itemCount: list.length,
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  // return ChatUserCard();
-                  return Text('${list[index]}');
+                  return ChatUserCard(
+                    user: list[index],
+                  );
+                  // return Text('${list[index]}');
                 });
           }
 

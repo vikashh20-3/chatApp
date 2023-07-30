@@ -1,15 +1,14 @@
 // To parse this JSON data, do
 //
-//     final productModel = productModelFromJson(jsonString);
+//     final chatUser = chatUserFromJson(jsonString);
 
 import 'dart:convert';
 
-ProductModel productModelFromJson(String str) =>
-    ProductModel.fromJson(json.decode(str));
+ChatUser chatUserFromJson(String str) => ChatUser.fromJson(json.decode(str));
 
-String productModelToJson(ProductModel data) => json.encode(data.toJson());
+String chatUserToJson(ChatUser data) => json.encode(data.toJson());
 
-class ProductModel {
+class ChatUser {
   String? image;
   String? about;
   String? name;
@@ -20,10 +19,10 @@ class ProductModel {
   String? email;
   String? pushToken;
 
-  ProductModel({
+  ChatUser({
     this.image,
     this.about,
-    this.name,
+    required this.name,
     this.createdAt,
     this.lastActive,
     this.isOnline,
@@ -32,16 +31,16 @@ class ProductModel {
     this.pushToken,
   });
 
-  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
-        image: json["image"],
-        about: json["about"],
-        name: json["name"],
-        createdAt: json["created_at"],
-        lastActive: json["last_active"],
+  factory ChatUser.fromJson(Map<String, dynamic> json) => ChatUser(
+        image: json["image"] ?? '',
+        about: json["about"] ?? '',
+        name: json["name"] ?? '',
+        createdAt: json["created_at"] ?? '',
+        lastActive: json["last_active"] ?? '',
         isOnline: json["is_online"],
-        id: json["id"],
-        email: json["email"],
-        pushToken: json["push_token"],
+        id: json["id"] ?? '',
+        email: json["email"] ?? '',
+        pushToken: json["push_token"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -55,4 +54,6 @@ class ProductModel {
         "email": email,
         "push_token": pushToken,
       };
+
+  toList() {}
 }
