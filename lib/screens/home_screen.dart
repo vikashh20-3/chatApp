@@ -65,22 +65,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 final data = snapshot.data?.docs;
                 list = data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
                     [];
-
-              // for (var i in data!) {
-              //   log('\n Data: ${jsonEncode(i.data())}');
-              //   list.add(i.data()['name']);
-              // }
-              // log('\n Data from firestor =${data}');
             }
-            return ListView.builder(
-                itemCount: list.length,
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return ChatUserCard(
-                    user: list[index],
-                  );
-                  // return Text('${list[index]}');
-                });
+
+            if (list.isNotEmpty) {
+              return ListView.builder(
+                  itemCount: list.length,
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return ChatUserCard(
+                      user: list[index],
+                    );
+                    // return Text('${list[index]}');
+                  });
+            } else {
+              return const Center(child: Text("No Connection Found!"));
+            }
           }
 
           //   final list = [];

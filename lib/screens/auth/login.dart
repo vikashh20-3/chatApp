@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chatapp/api/apis.dart';
 import 'package:chatapp/helper/dialogs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +30,19 @@ void showSnack(BuildContext context) {
 _googleBtnClick(BuildContext context) {
   Dialogs.showProgressBar(context);
   // Navigator.pop(context);
-  _signInWithGoogle().then((user) {
+  _signInWithGoogle().then((user) async {
     if (user != null) {
       log('\nUser : ${user.user}');
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+
+      if (await APIs.userExists()) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
+      } else {
+        await APIs.createUser().then((value) {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: ((context) => const HomeScreen())));
+        });
+      }
     }
   });
 }
