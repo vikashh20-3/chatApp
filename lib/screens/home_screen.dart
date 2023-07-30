@@ -23,6 +23,8 @@ _logoutUser(BuildContext context) {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // List<ChatUser> list = [];
+  List list = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,26 +50,51 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: StreamBuilder(
-        stream: APIs.firestore.collection('users').snapshots(),
-        builder: (context, snapshot) {
-          final list = [];
-          if (snapshot.hasData) {
-            final data = snapshot.data?.docs;
-            for (var i in data!) {
-              log('\n Data: ${jsonEncode(i.data())}');
-              list.add(i.data()['name']);
+          stream: APIs.firestore.collection('users').snapshots(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+              case ConnectionState.none:
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+
+              case ConnectionState.active:
+              case ConnectionState.done:
+                final data = snapshot.data?.docs;
+                for (var i in data!) {
+                  log('\n Data: ${jsonEncode(i.data())}');
+                  list.add(i.data()['name']);
+                }
+              // log('\n Data from firestor =${data}');
             }
-            // log('\n Data from firestor =${data}');
+            return ListView.builder(
+                itemCount: list.length,
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  // return ChatUserCard();
+                  return Text('${list[index]}');
+                });
           }
-          return ListView.builder(
-              itemCount: list.length,
-              physics: BouncingScrollPhysics(),
-              itemBuilder: (context, index) {
-                // return ChatUserCard();
-                return Text('${list[index]}');
-              });
-        },
-      ),
+
+          //   final list = [];
+          //   if (snapshot.hasData) {
+          //     final data = snapshot.data?.docs;
+          //     for (var i in data!) {
+          //       log('\n Data: ${jsonEncode(i.data())}');
+          //       list.add(i.data()['name']);
+          //     }
+          //     // log('\n Data from firestor =${data}');
+          //   }
+          //   return ListView.builder(
+          //       itemCount: list.length,
+          //       physics: BouncingScrollPhysics(),
+          //       itemBuilder: (context, index) {
+          //         // return ChatUserCard();
+          //         return Text('${list[index]}');
+          //       });
+          // },
+          ),
     );
   }
 }
