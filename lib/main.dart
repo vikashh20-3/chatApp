@@ -1,4 +1,4 @@
-import 'package:chatapp/screens/auth/login.dart';
+import 'package:chatapp/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
                 // backgroundColor: Colors.white,
                 backgroundColor: Colors.transparent)),
         // home: const Login());
-        home: const Login());
+        home: const SplashScreen());
 
     //  const Login());
   }
