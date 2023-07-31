@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapp/api/apis.dart';
 import 'package:chatapp/helper/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../models/chat_user.dart';
 import 'auth/login.dart';
@@ -26,6 +28,7 @@ _logoutUser(BuildContext context) {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
+  String? _image;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -86,23 +89,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Stack(
                       children: [
-                        ClipRRect(
-                          // borderRadius: BorderRadius.circular(65),
-                          borderRadius: BorderRadius.circular(
-                              MediaQuery.of(context).size.height * .1),
-                          child: CachedNetworkImage(
-                            height: MediaQuery.of(context).size.height * .2,
-                            width: MediaQuery.of(context).size.width * .45,
-                            imageUrl: widget.user.image ?? '',
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) =>
-                                    CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.person_add_disabled_rounded),
-                          ),
-                        ),
+                        _image != null
+                            ? ClipRRect(
+                                // borderRadius: BorderRadius.circular(65),
+                                borderRadius: BorderRadius.circular(
+                                    MediaQuery.of(context).size.height * .1),
+                                child: Image.file(
+                                  File(_image!),
+                                  height:
+                                      MediaQuery.of(context).size.height * .2,
+                                  width:
+                                      MediaQuery.of(context).size.width * .45,
+                                  fit: BoxFit.cover,
+                                ),
+
+                                // child: CachedNetworkImage(
+                                //   height:
+                                //       MediaQuery.of(context).size.height * .2,
+                                //   width:
+                                //       MediaQuery.of(context).size.width * .45,
+                                //   imageUrl: widget.user.image ?? '',
+                                //   fit: BoxFit.cover,
+                                //   progressIndicatorBuilder:
+                                //       (context, url, downloadProgress) =>
+                                //           CircularProgressIndicator(
+                                //               value: downloadProgress.progress),
+                                //   errorWidget: (context, url, error) =>
+                                //       const Icon(
+                                //           Icons.person_add_disabled_rounded),
+                              )
+                            // )
+                            : ClipRRect(
+                                // borderRadius: BorderRadius.circular(65),
+                                borderRadius: BorderRadius.circular(
+                                    MediaQuery.of(context).size.height * .1),
+                                child: CachedNetworkImage(
+                                  height:
+                                      MediaQuery.of(context).size.height * .2,
+                                  width:
+                                      MediaQuery.of(context).size.width * .45,
+                                  imageUrl: widget.user.image ?? '',
+                                  fit: BoxFit.cover,
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          CircularProgressIndicator(
+                                              value: downloadProgress.progress),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(
+                                          Icons.person_add_disabled_rounded),
+                                ),
+                              ),
                         Positioned(
                           bottom: 5,
                           right: -4,
@@ -224,11 +260,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
+                          // // Capture a photo.
+//                         final XFile? photo =
+//                             await picker.pickImage(source: ImageSource.camera);
                           shape: const CircleBorder(),
                           fixedSize: Size(
                               MediaQuery.of(context).size.width * .3,
                               MediaQuery.of(context).size.height * .15)),
-                      onPressed: () {},
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        // Capture a photo.
+                        final XFile? photo =
+                            await picker.pickImage(source: ImageSource.camera);
+
+                        if (photo != null) {
+                          log('\n IMAGE PATH: ${photo.path} ');
+                          setState(() {
+                            _image = photo.path;
+                          });
+                          APIs.updateUserPic(File(_image!));
+                          Navigator.pop(context);
+                        }
+                      },
                       child: Image.asset('images/camera.png')),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -237,7 +290,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fixedSize: Size(
                               MediaQuery.of(context).size.width * .3,
                               MediaQuery.of(context).size.height * .15)),
-                      onPressed: () {},
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        // Pick an image.
+                        final XFile? image =
+                            await picker.pickImage(source: ImageSource.gallery);
+                        if (image != null) {
+                          log('\n IMAGE PATH: ${image.path} --- MINE TYPE  : ${image.mimeType}');
+                          setState(() {
+                            _image = image.path;
+                          });
+                          APIs.updateUserPic(File(_image!));
+                          Navigator.pop(context);
+                        }
+                      },
                       child: Image.asset('images/gallery.png'))
                 ],
               )
