@@ -14,35 +14,58 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: _appBar(),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        flexibleSpace: _appBar(),
       ),
     );
   }
 
   Widget _appBar() {
-    return Row(
-      children: [
-        IconButton(
-          onPressed: null,
-          icon: Icon(Icons.arrow_back),
-          color: Colors.black54,
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(55),
-          child: CachedNetworkImage(
-            imageUrl: widget.user.image ?? '',
-            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                CircularProgressIndicator(value: downloadProgress.progress),
-            errorWidget: (context, url, error) =>
-                Icon(Icons.person_add_disabled_rounded),
+    return Padding(
+      padding: const EdgeInsets.only(top: 40.0),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back),
+            color: Colors.black54,
           ),
-        ),
-      ],
+          ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: CachedNetworkImage(
+              imageUrl: widget.user.image ?? '',
+              height: MediaQuery.of(context).size.height * .05,
+              width: MediaQuery.of(context).size.width * .10,
+              fit: BoxFit.cover,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  CircularProgressIndicator(value: downloadProgress.progress),
+              errorWidget: (context, url, error) =>
+                  Icon(Icons.person_add_disabled_rounded),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.user.name ?? '',
+                  style: const TextStyle(fontSize: 17, color: Colors.black87),
+                ),
+                Text(
+                  widget.user.about ?? '',
+                  style: const TextStyle(fontSize: 14, color: Colors.black87),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

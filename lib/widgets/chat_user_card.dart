@@ -35,9 +35,12 @@ class _ChatUserCardState extends State<ChatUserCard> {
         },
         child: ListTile(
           leading: ClipRRect(
-            borderRadius: BorderRadius.circular(55),
+            borderRadius: BorderRadius.circular(100),
             child: CachedNetworkImage(
               imageUrl: widget.user.image ?? '',
+              height: MediaQuery.of(context).size.height * .07,
+              width: MediaQuery.of(context).size.width * .13,
+              fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, downloadProgress) =>
                   CircularProgressIndicator(value: downloadProgress.progress),
               errorWidget: (context, url, error) =>
