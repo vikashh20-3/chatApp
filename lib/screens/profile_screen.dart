@@ -107,8 +107,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           bottom: 5,
                           right: -4,
                           child: MaterialButton(
-                            onPressed: () {},
-                            child: Icon(Icons.edit),
+                            onPressed: () {
+                              _showBottomSheet();
+                            },
+                            child: const Icon(Icons.edit),
                             shape: const CircleBorder(),
                             color: Colors.white,
                           ),
@@ -119,20 +121,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 Text(
                   widget.user.email ?? '',
-                  style: TextStyle(color: Colors.black54, fontSize: 18),
+                  style: const TextStyle(color: Colors.black54, fontSize: 18),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .03,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: TextFormField(
                     initialValue: widget.user.name ?? '',
                     onSaved: (val) => APIs.me.name = val ?? '',
                     validator: (val) =>
                         val != null && val.isNotEmpty ? null : 'Required field',
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors
                                 .pink, // Replace this with your desired border color
@@ -153,14 +155,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: MediaQuery.of(context).size.height * .02,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: TextFormField(
                     initialValue: widget.user.about ?? '',
                     onSaved: (val) => APIs.me.about = val ?? '',
                     validator: (val) =>
                         val != null && val.isNotEmpty ? null : 'Required field',
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors
                                 .blue, // Replace this with your desired border color
@@ -185,12 +187,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       APIs.updateUserInfo();
-                      SnackBar(content: const Text('Updated succesfully'));
+                      const SnackBar(content: Text('Updated succesfully'));
                       log('Inside Validator');
                     }
                   },
-                  icon: Icon(Icons.edit_rounded),
-                  label: Text('Update'),
+                  icon: const Icon(Icons.edit_rounded),
+                  label: const Text('Update'),
                 )
               ],
             ),
@@ -198,5 +200,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  //bottom sheet for picking phoot
+  void _showBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: ((context) {
+          return ListView(
+            shrinkWrap: true,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 15),
+                child: Text(
+                  "Add your profile picture",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: const CircleBorder(),
+                          fixedSize: Size(
+                              MediaQuery.of(context).size.width * .3,
+                              MediaQuery.of(context).size.height * .15)),
+                      onPressed: () {},
+                      child: Image.asset('images/camera.png')),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: const CircleBorder(),
+                          fixedSize: Size(
+                              MediaQuery.of(context).size.width * .3,
+                              MediaQuery.of(context).size.height * .15)),
+                      onPressed: () {},
+                      child: Image.asset('images/gallery.png'))
+                ],
+              )
+            ],
+          );
+        }));
   }
 }

@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
         title: 'We Chat ',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: Color.fromARGB(255, 255, 255, 255)),
             useMaterial3: true,
             appBarTheme: const AppBarTheme(
                 elevation: 6,
