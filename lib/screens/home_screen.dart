@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:chatapp/api/apis.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:chatapp/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -32,10 +32,19 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("We Chat   "),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))
+          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ProfileScreen(
+                              user: list[0],
+                            )));
+              },
+              icon: const Icon(Icons.more_vert))
         ],
-        leading: Icon(CupertinoIcons.home),
+        // leading: const Icon(CupertinoIcons.home),
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 12.0),
