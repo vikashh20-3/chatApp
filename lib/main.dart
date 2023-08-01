@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
                 titleTextStyle: TextStyle(color: Colors.black),
                 // backgroundColor: Colors.white,
                 backgroundColor: Colors.transparent)),
-        // home: const Login());
         home: const SplashScreen());
 
     //  const Login());
