@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 // user: list[0],
                                 user: APIs.me)));
                   },
-                  icon: const Icon(Icons.more_vert))
+                  icon: const Icon(CupertinoIcons.person_alt_circle))
             ],
             leading: const Icon(CupertinoIcons.home),
           ),
@@ -150,26 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else {
                   return const Center(child: Text("No Connection Found!"));
                 }
-              }
-
-              //   final list = [];
-              //   if (snapshot.hasData) {
-              //     final data = snapshot.data?.docs;
-              //     for (var i in data!) {
-              //       log('\n Data: ${jsonEncode(i.data())}');
-              //       list.add(i.data()['name']);
-              //     }
-              //     // log('\n Data from firestor =${data}');
-              //   }
-              //   return ListView.builder(
-              //       itemCount: list.length,
-              //       physics: BouncingScrollPhysics(),
-              //       itemBuilder: (context, index) {
-              //         // return ChatUserCard();
-              //         return Text('${list[index]}');
-              //       });
-              // },
-              ),
+              }),
         ),
       ),
     );

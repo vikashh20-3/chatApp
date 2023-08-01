@@ -89,4 +89,14 @@ class APIs {
     await firestore.collection('users').doc(user.uid).update(
         {'image': me.image}).then((value) => log('profile pic updated'));
   }
+
+  /// CHAT SCREEN RELATED API'S
+
+  // for getting all MESSAGES from firebase
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages() {
+    return APIs.firestore
+        .collection('messages')
+        // .where('id', isNotEqualTo: user.uid)
+        .snapshots();
+  }
 }
