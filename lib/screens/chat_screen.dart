@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapp/widgets/msg_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,7 +17,8 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   //for storing all messages
-  final List<Message> _list = [];
+  List<Message> _list = [];
+  final _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               Expanded(
                 child: StreamBuilder(
-                    stream: APIs.getAllMessages(),
+                    stream: APIs.getAllMessages(widget.user),
                     builder: (context, snapshot) {
                       switch (snapshot.connectionState) {
                         case ConnectionState.waiting:
@@ -47,28 +45,13 @@ class _ChatScreenState extends State<ChatScreen> {
                         case ConnectionState.active:
                         case ConnectionState.done:
                           final data = snapshot.data?.docs;
-                          log('(${jsonEncode(data?[0].data())})');
-                        // _list = data
-                        //         ?.map((e) => ChatUser.fromJson(e.data()))
-                        //         .toList() ??
-                        //     [];
+                          // log('(${jsonEncode(data?[0].data())})');
+                          _list = data
+                                  ?.map((e) => Message.fromJson(e.data()))
+                                  .toList() ??
+                              [];
                       }
-                      _list.clear();
-                      _list.add(Message(
-                          fromId: 'xy',
-                          msg: "hii",
-                          read: '',
-                          sent: '12:56 AM',
-                          toId: '',
-                          type: Type.text));
 
-                      _list.add(Message(
-                          fromId: APIs.user.uid,
-                          msg: "hello",
-                          read: '',
-                          sent: '12:56 AM',
-                          toId: '',
-                          type: Type.text));
                       if (_list.isNotEmpty) {
                         return ListView.builder(
                             itemCount: _list.length,
@@ -86,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       }
                     }),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Row(children: [
                   Icon(CupertinoIcons.smiley),
@@ -94,19 +77,31 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextField(
+                        controller: _textController,
                         maxLines: null,
-                        decoration: InputDecoration(),
+                        decoration: const InputDecoration(
+                            hintText: 'Type Something ....',
+                            hintStyle: TextStyle(color: Colors.blue),
+                            border: InputBorder.none),
                       ),
                     ),
                   ),
                   Icon(CupertinoIcons.photo_on_rectangle),
                   Icon(CupertinoIcons.photo_camera),
-                  Padding(
-                    padding: EdgeInsets.only(left: 12.0, right: 5.0),
-                    child: Icon(
-                      CupertinoIcons.arrow_right_circle,
-                      color: Colors.lightBlue,
-                      size: 25,
+                  InkWell(
+                    onTap: () {
+                      if (_textController.text.isNotEmpty) {
+                        APIs.sendMessage(widget.user, _textController.text);
+                        _textController.text = '';
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 12.0, right: 5.0),
+                      child: Icon(
+                        CupertinoIcons.arrow_right_circle,
+                        color: Colors.lightBlue,
+                        size: 25,
+                      ),
                     ),
                   )
                 ]),

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chatapp/models/chat_user.dart';
+import 'package:chatapp/models/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -93,10 +94,47 @@ class APIs {
   /// CHAT SCREEN RELATED API'S
 
   // for getting all MESSAGES from firebase
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages() {
+  // static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages() {
+  //   return APIs.firestore
+  //       .collection('messages')
+  //       // .where('id', isNotEqualTo: user.uid)
+  //       .snapshots();
+  // }
+
+  //// USEFUL FOR GETTING COVERSATION ID
+  static String getConversationId(String id) => user.uid.hashCode <= id.hashCode
+      // ? '${user.uid}_$id'
+      // : '${id}_${user.uid}';
+      ? '${user.uid}_$id'
+      : '${id}_${user.uid}';
+
+  ////FOR GETTING ALL MESSAGES FROM A SPECIFIC CONVERSATION FROM FIRESTORE DATABASE
+  ///
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
+      ChatUser user) {
     return APIs.firestore
-        .collection('messages')
-        // .where('id', isNotEqualTo: user.uid)
+        .collection('chats/${getConversationId(user.id.toString())}/messages/')
+        .orderBy('sent', descending: true)
         .snapshots();
+    // .collection('chats/${getConversationId(user.id.toString())}/messages/')
+    // // .where('id', isNotEqualTo: user.uid)
+    // .snapshots();
+  }
+
+  /// for sending message
+  static Future<void> sendMessage(ChatUser chatUser, String msg) async {
+    //message sending time (also used as doc id)
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+    //message to send
+    final Message message = Message(
+        fromId: user.uid,
+        msg: msg,
+        read: '',
+        sent: time,
+        toId: chatUser.uid,
+        type: Type.text);
+    final ref = firestore.collection(
+        'chats/${getConversationId(chatUser.id.toString())}/messages/');
+    await ref.doc(time).set(message.toJson());
   }
 }

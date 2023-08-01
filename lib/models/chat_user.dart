@@ -43,6 +43,8 @@ class ChatUser {
         pushToken: json["push_token"] ?? '',
       );
 
+  get uid => null;
+
   Map<String, dynamic> toJson() => {
         "image": image,
         "about": about,
