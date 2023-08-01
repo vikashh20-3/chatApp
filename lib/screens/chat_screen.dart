@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chatapp/widgets/msg_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../api/apis.dart';
 import '../models/chat_user.dart';
+import '../models/message.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
@@ -17,7 +19,9 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  List<ChatUser> _list = [];
+  //for storing all messages
+  final List<Message> _list = [];
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -49,15 +53,29 @@ class _ChatScreenState extends State<ChatScreen> {
                         //         .toList() ??
                         //     [];
                       }
+                      _list.clear();
+                      _list.add(Message(
+                          fromId: 'xy',
+                          msg: "hii",
+                          read: '',
+                          sent: '12:56 AM',
+                          toId: '',
+                          type: Type.text));
 
-                      final _list = [];
-
+                      _list.add(Message(
+                          fromId: APIs.user.uid,
+                          msg: "hello",
+                          read: '',
+                          sent: '12:56 AM',
+                          toId: '',
+                          type: Type.text));
                       if (_list.isNotEmpty) {
                         return ListView.builder(
                             itemCount: _list.length,
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
-                              return Text('${_list[index]}');
+                              // return Text('${_list[index]}');
+                              return MessageCard(message: _list[index]);
                             });
                       } else {
                         return const Center(
