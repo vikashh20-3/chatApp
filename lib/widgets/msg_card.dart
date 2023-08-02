@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapp/helper/my_dat_utils.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +25,10 @@ class _MessageCardState extends State<MessageCard> {
 
   //sender user message
   Widget _blueMessage() {
+    if (widget.message.read!.isEmpty) {
+      APIs.updateMessageStatus(widget.message);
+      log('message status updated');
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
