@@ -17,6 +17,12 @@ class MessageCard extends StatefulWidget {
 
 class _MessageCardState extends State<MessageCard> {
   @override
+  String getFormattedTime(
+      {required BuildContext context, required String time}) {
+    final date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
+    return TimeOfDay.fromDateTime(date).format(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return APIs.user.uid == widget.message.fromId

@@ -62,14 +62,12 @@ class _ChatUserCardState extends State<ChatUserCard> {
                             Icon(Icons.person_add_disabled_rounded),
                       ),
                     ),
-                    // leading: CircleAvatar(
-                    //   backgroundColor: Colors.transparent,
-                    //   child: Icon(Icons.person_3_outlined),
-                    // ),
                     title: Text(widget.user.name ?? ''),
                     subtitle: Text(
                       _message != null
-                          ? _message!.msg.toString()
+                          ? _message!.type == Type.image
+                              ? 'Image 🖼️'
+                              : _message!.msg.toString()
                           : widget.user.about ?? '',
                       maxLines: 1,
                     ),
