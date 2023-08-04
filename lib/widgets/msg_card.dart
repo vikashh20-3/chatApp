@@ -17,6 +17,7 @@ class MessageCard extends StatefulWidget {
 
 class _MessageCardState extends State<MessageCard> {
   @override
+  @override
   Widget build(BuildContext context) {
     return APIs.user.uid == widget.message.fromId
         ? _greenMessage()
@@ -29,6 +30,7 @@ class _MessageCardState extends State<MessageCard> {
       APIs.updateMessageStatus(widget.message);
       log('message status updated');
     }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -80,6 +82,7 @@ class _MessageCardState extends State<MessageCard> {
           child: Text(
             MyDateUtil.getFormattedTime(
                 context: context, time: widget.message.sent.toString()),
+            // ignore: unnecessary_brace_in_string_interps
 
             // widget.message.sent.toString(),
             // MyDateUtil.getFormattedTime(
@@ -105,9 +108,9 @@ class _MessageCardState extends State<MessageCard> {
           padding:
               EdgeInsets.only(right: MediaQuery.of(context).size.width * .45),
           child: Text(
-            widget.message.sent.toString(),
-            // MyDateUtil.getFormattedTime(
-            //     context: context, time: widget.message.sent),
+            // widget.message.sent.toString(),
+            MyDateUtil.getFormattedTime(
+                context: context, time: widget.message.sent.toString()),
             style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
         ),

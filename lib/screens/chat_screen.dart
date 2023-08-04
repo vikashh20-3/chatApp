@@ -87,7 +87,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   Icon(CupertinoIcons.photo_on_rectangle),
-                  Icon(CupertinoIcons.photo_camera),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Icon(CupertinoIcons.photo_camera),
+                  ),
                   InkWell(
                     onTap: () {
                       if (_textController.text.isNotEmpty) {
@@ -98,7 +101,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 12.0, right: 5.0),
                       child: Icon(
-                        CupertinoIcons.arrow_right_circle,
+                        Icons.send_outlined,
                         color: Colors.lightBlue,
                         size: 25,
                       ),

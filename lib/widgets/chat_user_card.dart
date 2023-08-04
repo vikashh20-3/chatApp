@@ -39,6 +39,10 @@ class _ChatUserCardState extends State<ChatUserCard> {
           child: StreamBuilder(
               stream: APIs.getLastMessage(widget.user),
               builder: (context, snapshot) {
+                final data = snapshot.data?.docs;
+                if (data != null && data.first.exists) {
+                  _message = Message.fromJson(data.first.data());
+                }
                 return ListTile(
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
@@ -61,7 +65,9 @@ class _ChatUserCardState extends State<ChatUserCard> {
                   // ),
                   title: Text(widget.user.name ?? ''),
                   subtitle: Text(
-                    widget.user.about ?? '',
+                    _message != null
+                        ? _message!.msg.toString()
+                        : widget.user.about ?? '',
                     maxLines: 1,
                   ),
                   // trailing: Text("12:43"),
