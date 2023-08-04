@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapp/widgets/msg_card.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,98 +22,132 @@ class _ChatScreenState extends State<ChatScreen> {
   //for storing all messages
   List<Message> _list = [];
   final _textController = TextEditingController();
+  bool _isEmoji = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: _appBar(),
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: StreamBuilder(
-                    stream: APIs.getAllMessages(widget.user),
-                    builder: (context, snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                        case ConnectionState.none:
-                        // return const Center(
-                        //     child: CircularProgressIndicator(),
-                        //     );
+      child: WillPopScope(
+        onWillPop: () {
+          if (_isEmoji) {
+            setState(() {
+              _isEmoji = !_isEmoji;
+            });
+            return Future.value(false);
+          } else {
+            return Future.value(true);
+          }
+        },
+        child: Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              flexibleSpace: _appBar(),
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: StreamBuilder(
+                      stream: APIs.getAllMessages(widget.user),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                          case ConnectionState.none:
+                          case ConnectionState.active:
+                          case ConnectionState.done:
+                            final data = snapshot.data?.docs;
+                            _list = data
+                                    ?.map((e) => Message.fromJson(e.data()))
+                                    .toList() ??
+                                [];
+                        }
 
-                        case ConnectionState.active:
-                        case ConnectionState.done:
-                          final data = snapshot.data?.docs;
-                          // log('(${jsonEncode(data?[0].data())})');
-                          _list = data
-                                  ?.map((e) => Message.fromJson(e.data()))
-                                  .toList() ??
-                              [];
-                      }
-
-                      if (_list.isNotEmpty) {
-                        return ListView.builder(
-                            itemCount: _list.length,
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              // return Text('${_list[index]}');
-                              return MessageCard(message: _list[index]);
-                            });
-                      } else {
-                        return const Center(
-                            child: Text(
-                          "Say Hii ! 👋",
-                          style: TextStyle(fontSize: 22),
-                        ));
-                      }
-                    }),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Row(children: [
-                  Icon(CupertinoIcons.smiley),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: TextField(
-                        controller: _textController,
-                        maxLines: null,
-                        decoration: const InputDecoration(
-                            hintText: 'Type Something ....',
-                            hintStyle: TextStyle(color: Colors.blue),
-                            border: InputBorder.none),
-                      ),
-                    ),
-                  ),
-                  Icon(CupertinoIcons.photo_on_rectangle),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Icon(CupertinoIcons.photo_camera),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (_textController.text.isNotEmpty) {
-                        APIs.sendMessage(widget.user, _textController.text);
-                        _textController.text = '';
-                      }
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 12.0, right: 5.0),
-                      child: Icon(
-                        Icons.send_outlined,
-                        color: Colors.lightBlue,
-                        size: 25,
+                        if (_list.isNotEmpty) {
+                          return ListView.builder(
+                              itemCount: _list.length,
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                // return Text('${_list[index]}');
+                                return MessageCard(message: _list[index]);
+                              });
+                        } else {
+                          return const Center(
+                              child: Text(
+                            "Say Hii ! 👋",
+                            style: TextStyle(fontSize: 22),
+                          ));
+                        }
+                      }),
+                ),
+                _chatInput(),
+                if (_isEmoji)
+                  SizedBox(
+                    height: 200,
+                    child: EmojiPicker(
+                      textEditingController: _textController,
+                      config: Config(
+                        columns: 7,
+                        emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
                       ),
                     ),
                   )
-                ]),
-              ),
-            ],
-          )),
+              ],
+            )),
+      ),
+    );
+  }
+
+  /// Chat input
+  ///
+  ///
+  ///
+  Widget _chatInput() {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Row(children: [
+        IconButton(
+          onPressed: () {
+            setState(() {
+              _isEmoji = !_isEmoji;
+            });
+          },
+          icon: Icon(CupertinoIcons.smiley),
+        ),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: TextField(
+              controller: _textController,
+              maxLines: null,
+              decoration: const InputDecoration(
+                  hintText: 'Type Something ....',
+                  hintStyle: TextStyle(color: Colors.blue),
+                  border: InputBorder.none),
+            ),
+          ),
+        ),
+        Icon(CupertinoIcons.photo_on_rectangle),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Icon(CupertinoIcons.photo_camera),
+        ),
+        InkWell(
+          onTap: () {
+            if (_textController.text.isNotEmpty) {
+              APIs.sendMessage(widget.user, _textController.text);
+              _textController.text = '';
+            }
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 12.0, right: 5.0),
+            child: Icon(
+              Icons.send_outlined,
+              color: Colors.lightBlue,
+              size: 25,
+            ),
+          ),
+        )
+      ]),
     );
   }
 

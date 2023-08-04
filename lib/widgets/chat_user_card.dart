@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapp/api/apis.dart';
+import 'package:chatapp/helper/my_dat_utils.dart';
 import 'package:chatapp/models/message.dart';
 import 'package:flutter/material.dart';
 
@@ -40,45 +41,53 @@ class _ChatUserCardState extends State<ChatUserCard> {
               stream: APIs.getLastMessage(widget.user),
               builder: (context, snapshot) {
                 final data = snapshot.data?.docs;
-                if (data != null && data.first.exists) {
-                  _message = Message.fromJson(data.first.data());
+                final list =
+                    data?.map((e) => Message.fromJson(e.data())).toList() ?? [];
+                if (list.isNotEmpty) {
+                  _message = list[0];
                 }
                 return ListTile(
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.user.image ?? '',
-                      height: MediaQuery.of(context).size.height * .07,
-                      width: MediaQuery.of(context).size.width * .13,
-                      fit: BoxFit.cover,
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) =>
-                              CircularProgressIndicator(
-                                  value: downloadProgress.progress),
-                      errorWidget: (context, url, error) =>
-                          Icon(Icons.person_add_disabled_rounded),
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.user.image ?? '',
+                        height: MediaQuery.of(context).size.height * .07,
+                        width: MediaQuery.of(context).size.width * .13,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            Icon(Icons.person_add_disabled_rounded),
+                      ),
                     ),
-                  ),
-                  // leading: CircleAvatar(
-                  //   backgroundColor: Colors.transparent,
-                  //   child: Icon(Icons.person_3_outlined),
-                  // ),
-                  title: Text(widget.user.name ?? ''),
-                  subtitle: Text(
-                    _message != null
-                        ? _message!.msg.toString()
-                        : widget.user.about ?? '',
-                    maxLines: 1,
-                  ),
-                  // trailing: Text("12:43"),
-                  trailing: Container(
-                    height: 10,
-                    width: 10,
-                    decoration: BoxDecoration(
-                        color: Colors.pink[200],
-                        borderRadius: BorderRadius.circular(15)),
-                  ),
-                );
+                    // leading: CircleAvatar(
+                    //   backgroundColor: Colors.transparent,
+                    //   child: Icon(Icons.person_3_outlined),
+                    // ),
+                    title: Text(widget.user.name ?? ''),
+                    subtitle: Text(
+                      _message != null
+                          ? _message!.msg.toString()
+                          : widget.user.about ?? '',
+                      maxLines: 1,
+                    ),
+                    // trailing: Text("12:43"),
+                    trailing: _message == null
+                        ? null
+                        : _message!.read!.isEmpty &&
+                                _message!.fromId != APIs.user.uid
+                            ? Container(
+                                height: 10,
+                                width: 10,
+                                decoration: BoxDecoration(
+                                    color: Colors.pink[200],
+                                    borderRadius: BorderRadius.circular(15)),
+                              )
+                            : Text(MyDateUtil.getFormattedTime(
+                                context: context,
+                                time: _message!.sent.toString())));
               })),
     );
   }
