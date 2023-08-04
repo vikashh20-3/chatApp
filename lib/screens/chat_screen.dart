@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapp/helper/my_dat_utils.dart';
+import 'package:chatapp/screens/view_profile_screen.dart';
 import 'package:chatapp/widgets/msg_card.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -195,74 +196,83 @@ class _ChatScreenState extends State<ChatScreen> {
 
 // topbar
   Widget _appBar() {
-    return Padding(
-        padding: const EdgeInsets.only(top: 40.0),
-        child: StreamBuilder(
-          stream: APIs.getUserInfo(widget.user),
-          builder: (context, snapshot) {
-            final data = snapshot.data?.docs;
-            final list =
-                data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
+    return InkWell(
+      onTap: () {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (_) => ViewProfileScreen(user: widget.user)));
+      },
+      child: Padding(
+          padding: const EdgeInsets.only(top: 40.0),
+          child: StreamBuilder(
+            stream: APIs.getUserInfo(widget.user),
+            builder: (context, snapshot) {
+              final data = snapshot.data?.docs;
+              final list =
+                  data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
 
-            return Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back),
-                  color: Colors.black54,
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: CachedNetworkImage(
-                    imageUrl: list.isNotEmpty
-                        ? list[0].image.toString()
-                        : widget.user.image.toString(),
-                    height: MediaQuery.of(context).size.height * .05,
-                    width: MediaQuery.of(context).size.width * .10,
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) =>
-                            CircularProgressIndicator(
-                                value: downloadProgress.progress),
-                    errorWidget: (context, url, error) =>
-                        Icon(Icons.person_add_disabled_rounded),
+              return Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.arrow_back),
+                    color: Colors.black54,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        list.isNotEmpty
-                            ? list[0].name.toString()
-                            : widget.user.name.toString(),
-                        style: const TextStyle(
-                            fontSize: 17, color: Colors.black87),
-                      ),
-                      Text(
-                        list.isNotEmpty
-                            ? list[0].isOnline!
-                                // && list[0].isOnline!
-                                ? 'Online'
-                                : MyDateUtil.getLastActiveTime(
-                                    context: context,
-                                    lastActive: list[0].lastActive.toString())
-                            : MyDateUtil.getLastActiveTime(
-                                context: context,
-                                lastActive: widget.user.lastActive.toString()),
-                        style: const TextStyle(
-                            fontSize: 14, color: Colors.black87),
-                      )
-                    ],
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: CachedNetworkImage(
+                      imageUrl: list.isNotEmpty
+                          ? list[0].image.toString()
+                          : widget.user.image.toString(),
+                      height: MediaQuery.of(context).size.height * .05,
+                      width: MediaQuery.of(context).size.width * .10,
+                      fit: BoxFit.cover,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) =>
+                              CircularProgressIndicator(
+                                  value: downloadProgress.progress),
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.person_add_disabled_rounded),
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
-        ));
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          list.isNotEmpty
+                              ? list[0].name.toString()
+                              : widget.user.name.toString(),
+                          style: const TextStyle(
+                              fontSize: 17, color: Colors.black87),
+                        ),
+                        Text(
+                          list.isNotEmpty
+                              ? list[0].isOnline!
+                                  // && list[0].isOnline!
+                                  ? 'Online'
+                                  : MyDateUtil.getLastActiveTime(
+                                      context: context,
+                                      lastActive: list[0].lastActive.toString())
+                              : MyDateUtil.getLastActiveTime(
+                                  context: context,
+                                  lastActive:
+                                      widget.user.lastActive.toString()),
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black87),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          )),
+    );
   }
 }

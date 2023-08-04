@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapp/api/apis.dart';
 import 'package:chatapp/helper/dialogs.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
@@ -50,10 +51,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: FloatingActionButton(
               onPressed: () async {
                 Dialogs.showProgressBar(context);
+                await APIs.updateActiveStatus(false);
                 await APIs.auth.signOut().then((value) async => {
                       await GoogleSignIn().signOut().then((value) {
                         Navigator.pop(context);
+
                         Navigator.pop(context);
+                        APIs.auth = FirebaseAuth.instance;
 
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (_) => const Login()));
@@ -102,21 +106,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       MediaQuery.of(context).size.width * .45,
                                   fit: BoxFit.cover,
                                 ),
-
-                                // child: CachedNetworkImage(
-                                //   height:
-                                //       MediaQuery.of(context).size.height * .2,
-                                //   width:
-                                //       MediaQuery.of(context).size.width * .45,
-                                //   imageUrl: widget.user.image ?? '',
-                                //   fit: BoxFit.cover,
-                                //   progressIndicatorBuilder:
-                                //       (context, url, downloadProgress) =>
-                                //           CircularProgressIndicator(
-                                //               value: downloadProgress.progress),
-                                //   errorWidget: (context, url, error) =>
-                                //       const Icon(
-                                //           Icons.person_add_disabled_rounded),
                               )
                             // )
                             : ClipRRect(

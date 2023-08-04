@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapp/api/apis.dart';
 import 'package:chatapp/helper/my_dat_utils.dart';
 import 'package:chatapp/models/message.dart';
+import 'package:chatapp/widgets/dialogs/profile_dailog.dart';
 import 'package:flutter/material.dart';
 
 import '../models/chat_user.dart';
@@ -47,19 +48,26 @@ class _ChatUserCardState extends State<ChatUserCard> {
                   _message = list[0];
                 }
                 return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.user.image ?? '',
-                        height: MediaQuery.of(context).size.height * .07,
-                        width: MediaQuery.of(context).size.width * .13,
-                        fit: BoxFit.cover,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) =>
-                            Icon(Icons.person_add_disabled_rounded),
+                    leading: InkWell(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (_) => ProfileDialog(user: widget.user));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.user.image ?? '',
+                          height: MediaQuery.of(context).size.height * .07,
+                          width: MediaQuery.of(context).size.width * .13,
+                          fit: BoxFit.cover,
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.person_add_disabled_rounded),
+                        ),
                       ),
                     ),
                     title: Text(widget.user.name ?? ''),
