@@ -4,6 +4,7 @@ import 'package:chatapp/api/apis.dart';
 import 'package:chatapp/screens/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/chat_user.dart';
@@ -35,6 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     APIs.getSelfInfo();
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      log('message:${message}');
+      return Future.value(message);
+    });
   }
 
   // List list = [];
