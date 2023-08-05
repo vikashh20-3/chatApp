@@ -57,6 +57,7 @@ class _MessageCardState extends State<MessageCard> {
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
                     bottomRight: Radius.circular(30))),
+            // child: widget.message.type == Type.text
             child: widget.message.type == Type.text
                 ?
                 //show text
