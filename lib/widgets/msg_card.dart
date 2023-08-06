@@ -90,11 +90,6 @@ class _MessageCardState extends State<MessageCard> {
           child: Text(
             MyDateUtil.getFormattedTime(
                 context: context, time: widget.message.sent.toString()),
-            // ignore: unnecessary_brace_in_string_interps
-
-            // widget.message.sent.toString(),
-            // MyDateUtil.getFormattedTime(
-            //     context: context, time: widget.message.sent),
             style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
         ),
@@ -174,17 +169,31 @@ class _MessageCardState extends State<MessageCard> {
         builder: ((context) {
           return ListView(
             shrinkWrap: true,
-            children: const [
-              Padding(
-                padding: EdgeInsets.only(top: 8.0, bottom: 15),
-                child: Text(
-                  "Add your profile picture",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                ),
-              ),
-            ],
+            children: [_OptionItem(icon: Icon(Icons.abc), name: 'hii')],
           );
         }));
+  }
+}
+
+class _OptionItem extends StatelessWidget {
+  final Icon icon;
+  final String name;
+  // final VoidCallback onTap;
+  const _OptionItem(
+      // {super.key, required this.icon, required this.name, this.onTap});
+      {
+    super.key,
+    required this.icon,
+    required this.name,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      // onTap: () => onTap(),
+      child: Row(
+        children: [icon, Flexible(child: Text('      ${name}'))],
+      ),
+    );
   }
 }
