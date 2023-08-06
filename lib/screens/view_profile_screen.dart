@@ -23,8 +23,6 @@ _logoutUser(BuildContext context) {
 }
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
-  final _formKey = GlobalKey<FormState>();
-  String? _image;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

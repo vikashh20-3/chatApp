@@ -76,7 +76,7 @@ class APIs {
   // update profile picture of user
 
   static Future<void> updateUserPic(File file) async {
-    final ext = file.path?.split('.').last;
+    final ext = file.path.split('.').last;
     log('\nExtension ${ext}');
     final ref = storage.ref().child('profile_pictures/ ${user.uid}');
     await ref
@@ -162,7 +162,7 @@ class APIs {
   // upload image to firebase
 
   static Future<void> sendChatImage(ChatUser chatUser, File file) async {
-    final ext = file.path?.split('.').last;
+    final ext = file.path.split('.').last;
     log('\nExtension ${ext}');
     final ref = storage.ref().child(
         'Images / ${getConversationId(chatUser.id.toString())}/${DateTime.now().millisecondsSinceEpoch}/${user.uid}');
