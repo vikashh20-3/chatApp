@@ -19,9 +19,16 @@ class _MessageCardState extends State<MessageCard> {
   @override
   @override
   Widget build(BuildContext context) {
-    return APIs.user.uid == widget.message.fromId
-        ? _greenMessage()
-        : _blueMessage();
+    bool isMe = APIs.user.uid == widget.message.fromId;
+    // return APIs.user.uid == widget.message.fromId
+
+    //     ? _greenMessage()
+    //     : _blueMessage();
+    return InkWell(
+        onLongPress: () {
+          _showBottomSheet();
+        },
+        child: isMe ? _greenMessage() : _blueMessage());
   }
 
   //sender user message
@@ -159,5 +166,25 @@ class _MessageCardState extends State<MessageCard> {
         //message time
       ],
     );
+  }
+
+  void _showBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: ((context) {
+          return ListView(
+            shrinkWrap: true,
+            children: const [
+              Padding(
+                padding: EdgeInsets.only(top: 8.0, bottom: 15),
+                child: Text(
+                  "Add your profile picture",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                ),
+              ),
+            ],
+          );
+        }));
   }
 }

@@ -120,7 +120,7 @@ class APIs {
         "notification": {
           "title": chatUser.name,
           "body": msg,
-          "android_channel_id": "chats",
+          "android_channel_id": 'chats',
         }
       };
       var res = await post(Uri.parse('https://fmc.googleapis.com/fcm/send'),
