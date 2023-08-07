@@ -233,7 +233,8 @@ class _MessageCardState extends State<MessageCard> {
                 color: Colors.blue,
                 size: 26,
               ),
-              name: 'Sent At',
+              name:
+                  'Sent At: ${MyDateUtil.getMessageTime(context: context, time: widget.message.sent.toString())}',
             ),
             _OptionItem(
               onTap: () {},
@@ -242,7 +243,9 @@ class _MessageCardState extends State<MessageCard> {
                 color: Colors.red,
                 size: 26,
               ),
-              name: 'Read At',
+              name: widget.message.read!.isEmpty
+                  ? 'Read At: Not Seen yet'
+                  : 'Read At: ${MyDateUtil.getMessageTime(context: context, time: widget.message.read.toString())}',
             )
           ]);
         }));

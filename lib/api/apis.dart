@@ -21,7 +21,7 @@ class APIs {
 
   static late ChatUser me;
   //to return current user
-  static get user => auth.currentUser!;
+  static get user => auth.currentUser;
   //for checking user exists or not
   static Future<bool> userExists() async {
     return (await firestore.collection('users').doc(user.uid).get()).exists;
