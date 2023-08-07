@@ -26,7 +26,7 @@ class _MessageCardState extends State<MessageCard> {
     //     : _blueMessage();
     return InkWell(
         onLongPress: () {
-          _showBottomSheet();
+          _showBottomSheet(isMe);
         },
         child: isMe ? _greenMessage() : _blueMessage());
   }
@@ -164,14 +164,87 @@ class _MessageCardState extends State<MessageCard> {
     );
   }
 
-  void _showBottomSheet() {
+  void _showBottomSheet(bool isMe) {
     showModalBottomSheet(
         context: context,
         builder: ((context) {
-          return ListView(
-            shrinkWrap: true,
-            children: [_OptionItem(icon: Icon(Icons.abc), name: 'hii')],
-          );
+          return ListView(shrinkWrap: true, children: [
+            Container(
+              height: 4,
+              margin: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * .015,
+                  horizontal: MediaQuery.of(context).size.width * .4),
+              decoration: BoxDecoration(
+                  color: Colors.grey, borderRadius: BorderRadius.circular(8)),
+            ),
+            widget.message.type == Type.text
+                ? _OptionItem(
+                    onTap: () {},
+                    icon: Icon(
+                      Icons.copy_rounded,
+                      color: Colors.blue,
+                      size: 26,
+                    ),
+                    name: 'Copy Text',
+                  )
+                : _OptionItem(
+                    onTap: () {},
+                    icon: Icon(
+                      Icons.copy_rounded,
+                      color: Colors.blue,
+                      size: 26,
+                    ),
+                    name: 'Save Image',
+                  ),
+            Divider(
+              color: Colors.black54,
+              indent: MediaQuery.of(context).size.width * .04,
+              endIndent: MediaQuery.of(context).size.width * .04,
+            ),
+            if (widget.message.type == Type.text && isMe)
+              _OptionItem(
+                onTap: () {},
+                icon: Icon(
+                  Icons.mode_edit_outlined,
+                  color: Colors.blue,
+                  size: 26,
+                ),
+                name: 'Edit Message',
+              ),
+            if (isMe)
+              _OptionItem(
+                onTap: () {},
+                icon: Icon(
+                  Icons.delete_outline_sharp,
+                  color: Colors.red,
+                  size: 26,
+                ),
+                name: 'Delete Message',
+              ),
+            Divider(
+              color: Colors.black54,
+              indent: MediaQuery.of(context).size.width * .04,
+              endIndent: MediaQuery.of(context).size.width * .04,
+            ),
+            _OptionItem(
+              onTap: () {},
+              icon: Icon(
+                Icons.remove_red_eye,
+                color: Colors.blue,
+                size: 26,
+              ),
+              name: 'Sent At',
+            ),
+            _OptionItem(
+              onTap: () {},
+              icon: Icon(
+                Icons.remove_red_eye_sharp,
+                color: Colors.red,
+                size: 26,
+              ),
+              name: 'Read At',
+            )
+          ]);
         }));
   }
 }
@@ -179,21 +252,30 @@ class _MessageCardState extends State<MessageCard> {
 class _OptionItem extends StatelessWidget {
   final Icon icon;
   final String name;
-  // final VoidCallback onTap;
+  final VoidCallback onTap;
   const _OptionItem(
-      // {super.key, required this.icon, required this.name, this.onTap});
-      {
-    super.key,
-    required this.icon,
-    required this.name,
-  });
+      {super.key, required this.icon, required this.name, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context).size;
     return InkWell(
-      // onTap: () => onTap(),
-      child: Row(
-        children: [icon, Flexible(child: Text('      ${name}'))],
+      onTap: () => onTap(),
+      child: Padding(
+        padding: EdgeInsets.only(
+            left: mq.width * .05,
+            top: mq.height * .015,
+            bottom: mq.height * .025),
+        child: Row(
+          children: [
+            icon,
+            Flexible(
+                child: Text(
+              '      ${name}',
+              style: TextStyle(color: Colors.black, fontSize: 15),
+            ))
+          ],
+        ),
       ),
     );
   }
