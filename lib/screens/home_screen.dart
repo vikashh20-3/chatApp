@@ -52,7 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // List list = [];
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -124,6 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () async {
                 await APIs.auth.signOut();
                 await GoogleSignIn().signOut();
+
+                // await APIs.updateActiveStatus(false);
                 log("user logouted");
                 // log("\n ${Firebase}");
                 _logoutUser(context);

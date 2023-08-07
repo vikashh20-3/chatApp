@@ -22,11 +22,11 @@ class MyDateUtil {
     if (now.day == sent.day &&
         now.month == sent.month &&
         now.year == sent.year) {
-      return TimeOfDay.fromDateTime(sent).format(context);
+      return formattedTime;
     }
     return now.year == sent.year
-        ? '${sent.day}, ${_getMonth(sent)} , ${sent.year}'
-        : '${sent.day}, ${_getMonth(sent)}';
+        ? ' $formattedTime , ${sent.day}, ${_getMonth(sent)} , ${sent.year}'
+        : '$formattedTime ,${sent.day}, ${_getMonth(sent)}';
   }
 
   //get last message time used in user card

@@ -249,4 +249,15 @@ class APIs {
       'push_token': me.pushToken,
     });
   }
+
+  static Future<void> deleteMessage(Message message) async {
+    await firestore
+        .collection(
+            'chats/${getConversationId(message.toId.toString())}/messages/')
+        .doc(message.sent)
+        .delete();
+    if (message.type == Type.image) {
+      await storage.refFromURL(message.msg.toString()).delete();
+    }
+  }
 }

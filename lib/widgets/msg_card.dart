@@ -1,8 +1,11 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chatapp/helper/dialogs.dart';
 import 'package:chatapp/helper/my_dat_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 import '../api/apis.dart';
 import '../models/message.dart';
@@ -16,7 +19,6 @@ class MessageCard extends StatefulWidget {
 }
 
 class _MessageCardState extends State<MessageCard> {
-  @override
   @override
   Widget build(BuildContext context) {
     bool isMe = APIs.user.uid == widget.message.fromId;
@@ -179,8 +181,16 @@ class _MessageCardState extends State<MessageCard> {
             ),
             widget.message.type == Type.text
                 ? _OptionItem(
-                    onTap: () {},
-                    icon: Icon(
+                    onTap: () async {
+                      await Clipboard.setData(ClipboardData(
+                              text: widget.message.msg.toString()))
+                          .then((value) {
+                        Navigator.pop(context);
+
+                        Dialogs.showSnackBar(context, 'Text Copied');
+                      });
+                    },
+                    icon: const Icon(
                       Icons.copy_rounded,
                       color: Colors.blue,
                       size: 26,
@@ -188,7 +198,18 @@ class _MessageCardState extends State<MessageCard> {
                     name: 'Copy Text',
                   )
                 : _OptionItem(
-                    onTap: () {},
+                    onTap: () async {
+                      GallerySaver.saveImage(widget.message.msg.toString(),
+                              albumName: 'We Chat')
+                          .then((success) {
+                        //for removing dialogbox
+                        Navigator.pop(context);
+                        if (success != null && success) {
+                          Dialogs.showSnackBar(
+                              context, 'Image Succesfully Saved');
+                        }
+                      });
+                    },
                     icon: Icon(
                       Icons.copy_rounded,
                       color: Colors.blue,
@@ -204,7 +225,7 @@ class _MessageCardState extends State<MessageCard> {
             if (widget.message.type == Type.text && isMe)
               _OptionItem(
                 onTap: () {},
-                icon: Icon(
+                icon: const Icon(
                   Icons.mode_edit_outlined,
                   color: Colors.blue,
                   size: 26,
@@ -214,7 +235,7 @@ class _MessageCardState extends State<MessageCard> {
             if (isMe)
               _OptionItem(
                 onTap: () {},
-                icon: Icon(
+                icon: const Icon(
                   Icons.delete_outline_sharp,
                   color: Colors.red,
                   size: 26,
@@ -228,7 +249,7 @@ class _MessageCardState extends State<MessageCard> {
             ),
             _OptionItem(
               onTap: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.remove_red_eye,
                 color: Colors.blue,
                 size: 26,
@@ -238,7 +259,7 @@ class _MessageCardState extends State<MessageCard> {
             ),
             _OptionItem(
               onTap: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.remove_red_eye_sharp,
                 color: Colors.red,
                 size: 26,
