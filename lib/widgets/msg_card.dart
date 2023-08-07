@@ -127,8 +127,9 @@ class _MessageCardState extends State<MessageCard> {
                 horizontal: MediaQuery.of(context).size.width * .04,
                 vertical: MediaQuery.of(context).size.height * .01),
             decoration: BoxDecoration(
-                color: Color.fromARGB(255, 152, 242, 136),
-                border: Border.all(color: Color.fromARGB(255, 19, 117, 0)),
+                color: const Color.fromARGB(255, 152, 242, 136),
+                border:
+                    Border.all(color: const Color.fromARGB(255, 19, 117, 0)),
                 //making borders curved
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(30),
