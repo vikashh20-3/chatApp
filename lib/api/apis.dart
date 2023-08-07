@@ -250,6 +250,7 @@ class APIs {
     });
   }
 
+  //for delete a sended message
   static Future<void> deleteMessage(Message message) async {
     await firestore
         .collection(
@@ -259,5 +260,16 @@ class APIs {
     if (message.type == Type.image) {
       await storage.refFromURL(message.msg.toString()).delete();
     }
+  }
+
+  //for update a sended message
+  //update message
+  static Future<void> updateMessage(
+      Message message, String updateMessage) async {
+    await firestore
+        .collection(
+            'chats/${getConversationId(message.toId.toString())}/messages/')
+        .doc(message.sent)
+        .update({'msg': updateMessage});
   }
 }

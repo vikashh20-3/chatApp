@@ -179,44 +179,53 @@ class _MessageCardState extends State<MessageCard> {
               decoration: BoxDecoration(
                   color: Colors.grey, borderRadius: BorderRadius.circular(8)),
             ),
-            widget.message.type == Type.text
-                ? _OptionItem(
-                    onTap: () async {
-                      await Clipboard.setData(ClipboardData(
-                              text: widget.message.msg.toString()))
-                          .then((value) {
-                        Navigator.pop(context);
+            if (widget.message.type == Type.text)
+              _OptionItem(
+                onTap: () async {
+                  await Clipboard.setData(
+                          ClipboardData(text: widget.message.msg.toString()))
+                      .then((value) {
+                    Navigator.pop(context);
 
-                        Dialogs.showSnackBar(context, 'Text Copied');
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.copy_rounded,
-                      color: Colors.blue,
-                      size: 26,
-                    ),
-                    name: 'Copy Text',
-                  )
-                : _OptionItem(
-                    onTap: () async {
-                      GallerySaver.saveImage(widget.message.msg.toString(),
-                              albumName: 'We Chat')
-                          .then((success) {
-                        //for removing dialogbox
+                    Dialogs.showSnackBar(context, 'Text Copied');
+                  });
+                },
+                icon: const Icon(
+                  Icons.copy_rounded,
+                  color: Colors.blue,
+                  size: 26,
+                ),
+                name: 'Copy Text',
+              ),
+            if (widget.message.msg != Type.text)
+              _OptionItem(
+                onTap: () async {
+                  final imageUrl = widget.message.msg;
+                  try {
+                    log('Image Url: ${widget.message.msg}');
+                    await GallerySaver.saveImage('$imageUrl',
+                            albumName: 'We Chat')
+                        .then((success) {
+                      //for hiding bottom sheet
+                      Navigator.pop(context);
+                      if (success != null && success) {
+                        Dialogs.showSnackBar(
+                            context, 'Image Successfully Saved!');
+                      } else {
                         Navigator.pop(context);
-                        if (success != null && success) {
-                          Dialogs.showSnackBar(
-                              context, 'Image Succesfully Saved');
-                        }
-                      });
-                    },
-                    icon: Icon(
-                      Icons.copy_rounded,
-                      color: Colors.blue,
-                      size: 26,
-                    ),
-                    name: 'Save Image',
-                  ),
+                      }
+                    });
+                  } catch (e) {
+                    log('ErrorWhileSavingImg: $e');
+                  }
+                },
+                icon: Icon(
+                  Icons.copy_rounded,
+                  color: Colors.blue,
+                  size: 26,
+                ),
+                name: 'Save Image',
+              ),
             Divider(
               color: Colors.black54,
               indent: MediaQuery.of(context).size.width * .04,
@@ -224,7 +233,10 @@ class _MessageCardState extends State<MessageCard> {
             ),
             if (widget.message.type == Type.text && isMe)
               _OptionItem(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  _showMessageUpdateDialog();
+                },
                 icon: const Icon(
                   Icons.mode_edit_outlined,
                   color: Colors.blue,
@@ -234,7 +246,9 @@ class _MessageCardState extends State<MessageCard> {
               ),
             if (isMe)
               _OptionItem(
-                onTap: () {},
+                onTap: () {
+                  APIs.deleteMessage(widget.message);
+                },
                 icon: const Icon(
                   Icons.delete_outline_sharp,
                   color: Colors.red,
@@ -270,6 +284,53 @@ class _MessageCardState extends State<MessageCard> {
             )
           ]);
         }));
+  }
+
+//Dialog for showing update message
+
+  void _showMessageUpdateDialog() {
+    String updateMessage = widget.message.msg.toString();
+
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              title: Row(
+                children: [
+                  Icon(Icons.message_outlined),
+                  Text("Update Message")
+                ],
+              ),
+              //content
+              content: TextFormField(
+                initialValue: updateMessage,
+                maxLines: null,
+                onChanged: (value) => updateMessage = value,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10))),
+              ),
+              actions: [
+                MaterialButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                    )),
+                MaterialButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      APIs.updateMessage(widget.message, updateMessage);
+                    },
+                    child: Text(
+                      "Update",
+                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                    )),
+              ],
+            ));
   }
 }
 
