@@ -47,9 +47,9 @@ class APIs {
     final time = DateTime.now().microsecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
-      name: auth.currentUser!.displayName,
+      name: auth.currentUser!.displayName.toString(),
       id: auth.currentUser!.uid,
-      email: auth.currentUser!.email,
+      email: auth.currentUser!.email.toString(),
       about: 'Hey there I am using We Chat',
       image: auth.currentUser!.photoURL.toString(),
       createdAt: time,
@@ -181,13 +181,14 @@ class APIs {
       ChatUser chatUser, String msg, Type type) async {
     //message sending time (also used as doc id)
     final time = DateTime.now().millisecondsSinceEpoch.toString();
+    log('sendMessage - chatUser.uid: ${chatUser.id}');
     //message to send
     final Message message = Message(
         fromId: user.uid,
         msg: msg,
         read: '',
         sent: time,
-        toId: chatUser.uid,
+        toId: chatUser.id,
         type: type);
     final ref = firestore.collection(
         'chats/${getConversationId(chatUser.id.toString())}/messages/');
@@ -252,16 +253,24 @@ class APIs {
   }
 
   //for delete a sended message
-  static Future<void> deleteMessage(Message message) async {
-    await firestore
+  // static Future<void> deleteMessage(Message message) async {
+  //   await firestore
+  //       .collection(
+  //           'chats/${getConversationId(message.toId.toString())}/messages/')
+  //       .doc(message.sent)
+  //       .delete();
+
+  //   if (message.type == Type.image) {
+  //     await storage.refFromURL(message.msg.toString()).delete();
+  //   }
+  // }
+
+  static Future<void> deleteMessage(Message message) {
+    return firestore
         .collection(
             'chats/${getConversationId(message.toId.toString())}/messages/')
         .doc(message.sent)
         .delete();
-
-    if (message.type == Type.image) {
-      await storage.refFromURL(message.msg.toString()).delete();
-    }
   }
 
   //for update a sended message

@@ -5,7 +5,6 @@ import 'package:chatapp/helper/dialogs.dart';
 import 'package:chatapp/helper/my_dat_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 
 import '../api/apis.dart';
 import '../models/message.dart';
@@ -35,7 +34,7 @@ class _MessageCardState extends State<MessageCard> {
 
   //sender user message
   Widget _blueMessage() {
-    if (widget.message.read!.isEmpty) {
+    if (widget.message.read.isEmpty) {
       APIs.updateMessageStatus(widget.message);
       log('message status updated');
     }
@@ -200,24 +199,24 @@ class _MessageCardState extends State<MessageCard> {
             if (widget.message.msg != Type.text)
               _OptionItem(
                 onTap: () async {
-                  final imageUrl = widget.message.msg;
-                  try {
-                    log('Image Url: ${widget.message.msg}');
-                    await GallerySaver.saveImage('$imageUrl',
-                            albumName: 'We Chat')
-                        .then((success) {
-                      //for hiding bottom sheet
-                      Navigator.pop(context);
-                      if (success != null && success) {
-                        Dialogs.showSnackBar(
-                            context, 'Image Successfully Saved!');
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    });
-                  } catch (e) {
-                    log('ErrorWhileSavingImg: $e');
-                  }
+                  // final imageUrl = widget.message.msg;
+                  // try {
+                  //   log('Image Url: ${widget.message.msg}');
+                  //   await GallerySaver.saveImage('$imageUrl',
+                  //           albumName: 'We Chat')
+                  //       .then((success) {
+                  //     //for hiding bottom sheet
+                  //     Navigator.pop(context);
+                  //     if (success != null && success) {
+                  //       Dialogs.showSnackBar(
+                  //           context, 'Image Successfully Saved!');
+                  //     } else {
+                  //       Navigator.pop(context);
+                  //     }
+                  //   });
+                  // } catch (e) {
+                  //   log('ErrorWhileSavingImg: $e');
+                  // }
                 },
                 icon: Icon(
                   Icons.copy_rounded,

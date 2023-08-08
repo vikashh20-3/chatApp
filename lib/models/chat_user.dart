@@ -1,61 +1,48 @@
-// To parse this JSON data, do
-//
-//     final chatUser = chatUserFromJson(jsonString);
-
-import 'dart:convert';
-
-ChatUser chatUserFromJson(String str) => ChatUser.fromJson(json.decode(str));
-
-String chatUserToJson(ChatUser data) => json.encode(data.toJson());
-
 class ChatUser {
-  String? image;
-  String? about;
-  String? name;
-  String? createdAt;
-  String? lastActive;
-  bool? isOnline;
-  String? id;
-  String? email;
-  String? pushToken;
-
   ChatUser({
-    this.image,
-    this.about,
+    required this.image,
+    required this.about,
     required this.name,
-    this.createdAt,
-    this.lastActive,
-    this.isOnline,
-    this.id,
-    this.email,
-    this.pushToken,
+    required this.createdAt,
+    required this.isOnline,
+    required this.id,
+    required this.lastActive,
+    required this.email,
+    required this.pushToken,
   });
+  late String image;
+  late String about;
+  late String name;
+  late String createdAt;
+  late bool isOnline;
+  late String id;
+  late String lastActive;
+  late String email;
+  late String pushToken;
 
-  factory ChatUser.fromJson(Map<String, dynamic> json) => ChatUser(
-        image: json["image"] ?? '',
-        about: json["about"] ?? '',
-        name: json["name"] ?? '',
-        createdAt: json["created_at"] ?? '',
-        lastActive: json["last_active"] ?? '',
-        isOnline: json["is_online"],
-        id: json["id"] ?? '',
-        email: json["email"] ?? '',
-        pushToken: json["push_token"] ?? '',
-      );
+  ChatUser.fromJson(Map<String, dynamic> json) {
+    image = json['image'] ?? '';
+    about = json['about'] ?? '';
+    name = json['name'] ?? '';
+    createdAt = json['created_at'] ?? '';
+    isOnline = json['is_online'] ?? '';
+    id = json['id'] ?? '';
+    lastActive = json['last_active'] ?? '';
+    email = json['email'] ?? '';
+    pushToken = json['push_token'] ?? '';
+  }
 
-  get uid => null;
-
-  Map<String, dynamic> toJson() => {
-        "image": image,
-        "about": about,
-        "name": name,
-        "created_at": createdAt,
-        "last_active": lastActive,
-        "is_online": isOnline,
-        "id": id,
-        "email": email,
-        "push_token": pushToken,
-      };
-
-  toList() {}
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['image'] = image;
+    data['about'] = about;
+    data['name'] = name;
+    data['created_at'] = createdAt;
+    data['is_online'] = isOnline;
+    data['id'] = id;
+    data['last_active'] = lastActive;
+    data['email'] = email;
+    data['push_token'] = pushToken;
+    return data;
+  }
 }
