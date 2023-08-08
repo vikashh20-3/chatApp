@@ -177,7 +177,12 @@ class _ChatScreenState extends State<ChatScreen> {
         InkWell(
           onTap: () {
             if (_textController.text.isNotEmpty) {
-              APIs.sendMessage(widget.user, _textController.text, Type.text);
+              if (_list.isEmpty) {
+                APIs.sendFirstMessage(
+                    widget.user, _textController.text, Type.text);
+              } else {
+                APIs.sendMessage(widget.user, _textController.text, Type.text);
+              }
               _textController.text = '';
             }
           },

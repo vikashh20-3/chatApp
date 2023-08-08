@@ -28,6 +28,35 @@ class APIs {
     return (await firestore.collection('users').doc(user.uid).get()).exists;
   }
 
+// add chat user
+  static Future<bool> addChatUser(String email) async {
+    final data = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    log('data: ${data.docs}');
+
+    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+      //user exists
+
+      log('user exists: ${data.docs.first.data()}');
+
+      firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('my_users')
+          .doc(data.docs.first.id)
+          .set({});
+
+      return true;
+    } else {
+      //user doesn't exists
+
+      return false;
+    }
+  }
+
   //for getting current user info
   static Future<void> getSelfInfo() async {
     await firestore.collection('users').doc(user.uid).get().then((user) async {
@@ -64,11 +93,33 @@ class APIs {
   }
 
   // for getting all users from firebase
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
+      List<String> userIds) {
+    log('\n useIds: $userIds');
     return APIs.firestore
         .collection('users')
-        .where('id', isNotEqualTo: user.uid)
+        .where('id', isNotEqualTo: user!.uid)
         .snapshots();
+  }
+
+  // for getting selected users from firebase
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getMyUsers() {
+    return APIs.firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('my_users')
+        .snapshots();
+  }
+
+  // for add your user after sending first message
+  static Future<void> sendFirstMessage(
+      ChatUser chatUser, String msg, Type type) async {
+    await firestore
+        .collection('users')
+        .doc(chatUser.id)
+        .collection('my_users')
+        .doc(user.uid)
+        .set({}).then((value) => sendMessage(chatUser, msg, type));
   }
 
   // for update user data in firebase
