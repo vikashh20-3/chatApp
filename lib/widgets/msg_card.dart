@@ -246,8 +246,16 @@ class _MessageCardState extends State<MessageCard> {
               ),
             if (isMe)
               _OptionItem(
-                onTap: () {
-                  APIs.deleteMessage(widget.message);
+                onTap: () async {
+                  try {
+                    await APIs.deleteMessage(widget.message).then((value) {
+                      //for hiding bottom sheet
+                      log('delted: ${widget.message.msg}');
+                      Navigator.pop(context);
+                    });
+                  } catch (e) {
+                    log('${e}');
+                  }
                 },
                 icon: const Icon(
                   Icons.delete_outline_sharp,
