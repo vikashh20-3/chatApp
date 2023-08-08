@@ -247,6 +247,24 @@ class APIs {
         sendPushNotification(chatUser, type == Type.text ? msg : 'Image'));
   }
 
+  static Future<void> deleteUser(ChatUser user) async {
+    try {
+      await APIs.firestore
+          .collection('users')
+          .doc(user.id)
+          .collection('my_users')
+          .doc(user.id)
+          .delete();
+
+      // User deleted successfully
+      print('User deleted successfully');
+    } catch (error) {
+      // An error occurred while deleting
+      print('Error deleting user: $error');
+      throw error; // Rethrow the error so the caller can handle it
+    }
+  }
+
 // update read status of messages
   static Future<void> updateMessageStatus(Message message) async {
     firestore
