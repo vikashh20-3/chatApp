@@ -35,7 +35,7 @@ class _MessageCardState extends State<MessageCard> {
   //sender user message
   Widget _blueMessage() {
     if (widget.message.read.isEmpty) {
-      APIs.updateMessageStatus(widget.message);
+      APIs.updateMessageReadStatus(widget.message);
       log('message status updated');
     }
 
@@ -198,26 +198,7 @@ class _MessageCardState extends State<MessageCard> {
               ),
             if (widget.message.msg != Type.text)
               _OptionItem(
-                onTap: () async {
-                  // final imageUrl = widget.message.msg;
-                  // try {
-                  //   log('Image Url: ${widget.message.msg}');
-                  //   await GallerySaver.saveImage('$imageUrl',
-                  //           albumName: 'We Chat')
-                  //       .then((success) {
-                  //     //for hiding bottom sheet
-                  //     Navigator.pop(context);
-                  //     if (success != null && success) {
-                  //       Dialogs.showSnackBar(
-                  //           context, 'Image Successfully Saved!');
-                  //     } else {
-                  //       Navigator.pop(context);
-                  //     }
-                  //   });
-                  // } catch (e) {
-                  //   log('ErrorWhileSavingImg: $e');
-                  // }
-                },
+                onTap: () async {},
                 icon: Icon(
                   Icons.copy_rounded,
                   color: Colors.blue,

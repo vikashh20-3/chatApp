@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           body: StreamBuilder(
-            stream: APIs.getMyUsers(),
+            stream: APIs.getMyUsersId(),
 
             //get id of only known users
             builder: (context, snapshot) {
@@ -195,62 +195,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      // body: StreamBuilder(
-      //   stream: APIs.getMyUsers(),
-      //   builder: (context, snapshot) {
-      //     switch (snapshot.connectionState) {
-      //       case ConnectionState.waiting:
-      //       case ConnectionState.none:
-      //         return const Center(
-      //           child: CircularProgressIndicator(),
-      //         );
-
-      //       case ConnectionState.active:
-      //       case ConnectionState.done:
-      //         return StreamBuilder(
-      //             stream: APIs.getAllUsers(
-      //                 snapshot.data?.docs.map((e) => e.id).toList() ?? []),
-      //             builder: (context, snapshot) {
-      //               switch (snapshot.connectionState) {
-      //                 case ConnectionState.waiting:
-      //                 case ConnectionState.none:
-      //                   return const Center(
-      //                     child: CircularProgressIndicator(),
-      //                   );
-
-      //                 case ConnectionState.active:
-      //                 case ConnectionState.done:
-      //                   final data = snapshot.data?.docs;
-      //                   _list = data
-      //                           ?.map((e) => ChatUser.fromJson(e.data()))
-      //                           .toList() ??
-      //                       [];
-      //               }
-
-      //               if (_list.isNotEmpty) {
-      //                 return ListView.builder(
-      //                     itemCount: _isSearching
-      //                         ? _searchList.length
-      //                         : _list.length,
-      //                     physics: const BouncingScrollPhysics(),
-      //                     itemBuilder: (context, index) {
-      //                       return ChatUserCard(
-      //                         user: _isSearching
-      //                             ? _searchList[index]
-      //                             : _list[index],
-      //                       );
-      //                       // return Text('${list[index]}');
-      //                     });
-      //               } else {
-      //                 return const Center(
-      //                     child: Text("No Connection Found!"));
-      //               }
-      //             });
-      //     }
-      //     return Center(child: CircularProgressIndicator(strokeWidth: 2));
-      //   },
-
-      // ),
     );
   }
 
