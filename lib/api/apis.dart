@@ -23,6 +23,7 @@ class APIs {
   static late ChatUser me;
   //to return current user
   static get user => auth.currentUser;
+
   //for checking user exists or not
   static Future<bool> userExists() async {
     return (await firestore.collection('users').doc(user.uid).get()).exists;
@@ -189,6 +190,7 @@ class APIs {
     }
   }
 
+//for update user pic
   static Future<void> updateUserPic(File file) async {
     final ext = file.path.split('.').last;
     log('\nExtension ${ext}');
@@ -209,13 +211,11 @@ class APIs {
 
   //// USEFUL FOR GETTING COVERSATION ID
   static String getConversationId(String id) => user.uid.hashCode <= id.hashCode
-      // ? '${user.uid}_$id'
-      // : '${id}_${user.uid}';
       ? '${user.uid}_$id'
       : '${id}_${user.uid}';
 
   ////FOR GETTING ALL MESSAGES FROM A SPECIFIC CONVERSATION FROM FIRESTORE DATABASE
-  ///
+
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
       ChatUser user) {
     return APIs.firestore
