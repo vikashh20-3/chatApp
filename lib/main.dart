@@ -21,11 +21,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'We Chat ',
+        title: ' We Chat ',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
-                seedColor: Color.fromARGB(255, 255, 255, 255)),
+                seedColor: const Color.fromARGB(255, 255, 255, 255)),
             useMaterial3: true,
             appBarTheme: const AppBarTheme(
                 elevation: 6,
